@@ -2,7 +2,7 @@ import { check, validationResult } from 'express-validator';
 
 const userValidator = [
   check('role')
-    .exists()
+    .isLength({ min: 1 })
     .withMessage('Role is required.')
     .custom((value) => value === 'user' || value === 'admin')
     .withMessage('Role must be user or admin!'),

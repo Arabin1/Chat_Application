@@ -1,0 +1,164 @@
+.left-side {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding-right: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 100%;
+}
+
+.app-logo {
+  display: flex;
+  padding: 15px 0 10px 30px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.app-logo > svg {
+  color: var(--text-color);
+}
+
+.conversations {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 2px;
+}
+
+.conversation-container,
+.selected-conversation-container {
+  padding: 15px 0 15px 15px;
+}
+
+.conversation-container:hover {
+  background-color: var(--bg-deep-color);
+  cursor: pointer;
+}
+
+.selected-conversation-container {
+  background-color: var(--bg-deep-color);
+  cursor: pointer;
+}
+
+.user-info,
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+}
+
+.conversation {
+  position: relative;
+}
+
+.online-dot {
+  background-color: var(--active-status-color);
+  border-radius: 50%;
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 6px;
+  height: 6px;
+}
+
+.user-info > img,
+.conversation > img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.user-info > div,
+.conversation > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 100%;
+}
+
+.user-info > div > h3 {
+  margin: 0;
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.user-info > div > span {
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.search-bar-container {
+  background-color: var(--bg-deep-color);
+  padding: 10px 10px 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.search-bar-container > svg {
+  color: var(--text-color);
+}
+
+.search-bar-container > input {
+  border: none;
+  border-bottom: 1px solid var(--bg-color);
+  background-color: transparent;
+  outline: none;
+  color: var(--text-color);
+  font-size: 15px;
+  padding: 5px;
+}
+
+.conversation > div > h3 {
+  margin: 0;
+  padding: 0;
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  width: 80%;
+  font-weight: normal;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.conversation > div > span {
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.search-bar-container > input::placeholder {
+  color: var(--text-color);
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-deep-color);
+}
+
+.footer > svg {
+  color: var(--text-color);
+  cursor: pointer;
+}

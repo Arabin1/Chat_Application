@@ -13,8 +13,8 @@ export const storeMessage = async (req, res) => {
     message = message.save();
 
     res.status(200).json({
-      message: 'The message was stored successfully!',
-      info: message,
+      msg: 'The message was stored successfully!',
+      message,
     });
   } catch (e) {
     res.status(500).json({

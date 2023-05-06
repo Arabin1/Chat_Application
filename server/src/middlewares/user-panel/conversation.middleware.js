@@ -5,7 +5,7 @@ import People from '../../models/People.js';
 
 export const conversationValidator = [
   check('participantPeopleId')
-    .exists()
+    .isLength({ min: 1 })
     .withMessage('ParticipantPeopleId is required.')
     .custom(async (value) => {
       if (!mongoose.Types.ObjectId.isValid(value)) {

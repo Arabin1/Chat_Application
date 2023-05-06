@@ -3,16 +3,8 @@ import mongoose from 'mongoose';
 import createError from 'http-errors';
 
 export const messageValidator = [
-  check('senderPeopleId')
-    .exists()
-    .withMessage('SenderPeopleId is required.')
-    .custom(async (value) => {
-      if (!mongoose.Types.ObjectId.isValid(value)) {
-        throw createError('SenderPeopleId should be a valid Object ID.');
-      }
-    }),
   check('conversationId')
-    .exists()
+    .isLength({ min: 1 })
     .withMessage('ConversationId is required.')
     .custom(async (value) => {
       if (!mongoose.Types.ObjectId.isValid(value)) {
@@ -20,7 +12,7 @@ export const messageValidator = [
       }
     }),
   check('text')
-    .exists()
+    .isLength({ min: 1 })
     .withMessage('Text is required.')
     .isString()
     .withMessage('Text must be a string.!'),

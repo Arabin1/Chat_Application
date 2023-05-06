@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import * as dotenv from 'dotenv';
 import notFoundHandler from './src/middlewares/common/notFound.middleware.js';
 import errorHandler from './src/middlewares/common/error.middleware.js';
@@ -23,6 +24,9 @@ mongoose
 // request parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// cors oringin
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 // set static folder
 app.use(express.static('public'));

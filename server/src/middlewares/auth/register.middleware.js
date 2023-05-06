@@ -3,10 +3,10 @@ import createError from 'http-errors';
 import People from '../../models/People.js';
 
 export const registerValidator = [
-  check('firstname').exists().withMessage('Firstname is required.'),
-  check('lastname').exists().withMessage('Lastname is required.'),
+  check('firstname').isLength({ min: 1 }).withMessage('Firstname is required.'),
+  check('lastname').isLength({ min: 1 }).withMessage('Lastname is required.'),
   check('email')
-    .exists()
+    .isLength({ min: 1 })
     .withMessage('Email is required.')
     .custom(async (value) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,7 +23,7 @@ export const registerValidator = [
       }
     }),
   check('password')
-    .exists()
+    .isLength({ min: 1 })
     .withMessage('Password is required!')
     .isStrongPassword()
     .withMessage(

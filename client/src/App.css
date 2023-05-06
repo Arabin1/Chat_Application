@@ -1,38 +1,35 @@
-.App {
-  text-align: center;
+/*For default theme*/
+:root {
+  --text-color: #fff;
+  --bg-color: #3f8cdf;
+  --bg-deep-color: #0776e8;
+  --bg-chatbox-color: #e5e9ea;
+  --receiver-text-color: #727473;
+  --receiver-bg-color: #fff;
+  --active-status-color: #ffc107;
+  --auth-m-bg-color: #e5e9ea;
+  --auth-bg-color: #fff;
+  --auth-title-color: #000;
+  --auth-text-color: #727473;
+  --auth-bg-color2: #3f8cdf;
+  --auth-text-color2: #fff;
+  --auth-text-color3: #e5e9ea;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/*For dark theme*/
+.theme-dark {
+  --text-color: #fff;
+  --bg-color: #2b3c4e;
+  --bg-deep-color: #30455a;
+  --bg-chatbox-color: #e5e9ea;
+  --receiver-text-color: #727473;
+  --receiver-bg-color: #fff;
+  --active-status-color: #ffc107;
+  --auth-m-bg-color: #e5e9ea;
+  --auth-bg-color: #fff;
+  --auth-title-color: #000;
+  --auth-text-color: #727473;
+  --auth-bg-color2: #3f8cdf;
+  --auth-text-color2: #fff;
+  --auth-text-color3: #e5e9ea;
 }

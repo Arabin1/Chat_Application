@@ -5,7 +5,7 @@ import People from '../../models/People.js';
 
 export const register = async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, process.env.SALT);
+    const hashedPassword = await bcrypt.hash(req.body.password, Number(process.env.SALT));
 
     const people = new People({
       ...req.body,
@@ -33,6 +33,7 @@ export const register = async (req, res) => {
       access_token: token,
     });
   } catch (e) {
+    console.log(e);
     res.status(500).json({
       errors: {
         common: {
