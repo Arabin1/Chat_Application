@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+import { unlink } from 'fs';
 import Conversation from './Conversation.js';
+import { upFolder, userImgFolder } from '../constants/util.constant.js';
 
 const peopleSchema = new mongoose.Schema(
   {
@@ -7,11 +9,15 @@ const peopleSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
+      minLength: 2,
+      maxLength: 25,
     },
     lastname: {
       type: String,
       trim: true,
       required: true,
+      minLength: 2,
+      maxLength: 25,
     },
     email: {
       type: String,
@@ -42,8 +48,15 @@ const peopleSchema = new mongoose.Schema(
 peopleSchema.post('findOneAndRemove', async (doc) => {
   try {
     const conversations = await Conversation.find({
-      $or: [{ creatorPeopleId: doc._id }, { participantPeopleId: doc._id }],
+      $or: [{ 'creator.people': doc._id }, { 'participant.people': doc._id }],
     });
+
+    // remove the profile pic
+    if (doc.image) {
+      unlink(`${upFolder}${userImgFolder}${doc.image}`, (err) => {
+        console.log(err);
+      });
+    }
 
     // eslint-disable-next-line no-restricted-syntax
     for (const conversation of conversations) {

@@ -43,17 +43,17 @@ const dataFactory = async () => {
         // Check if a conversation already exists between these two peoples
         const existingConversation = conversationData.filter(
           (conversation) =>
-            (conversation.creatorPeopleId === creator._id &&
-              conversation.participantPeopleId === participant._id) ||
-            (conversation.creatorPeopleId === participant._id &&
-              conversation.participantPeopleId === creator._id)
+            (conversation.creator?.people === creator._id &&
+              conversation.participant?.people === participant._id) ||
+            (conversation.creator?.people === participant._id &&
+              conversation.participant?.people === creator._id)
         );
 
         // If a conversation doesn't already exist, create a new one
         if (!existingConversation.length) {
           conversationData.push({
-            creatorPeopleId: creator._id,
-            participantPeopleId: participant._id,
+            'creator.people': creator._id,
+            'participant.people': participant._id,
           });
         }
       }
@@ -67,14 +67,14 @@ const dataFactory = async () => {
           // eslint-disable-next-line no-restricted-syntax
           for (const conversation of conversations) {
             messageData.push({
-              text: faker.lorem.sentence(10),
-              conversationId: conversation._id,
-              senderPeopleId: conversation.creatorPeopleId,
+              text: faker.lorem.sentence(15),
+              conversation: conversation._id,
+              sender: conversation.creator.people,
             });
             messageData.push({
-              text: faker.lorem.sentence(10),
-              conversationId: conversation._id,
-              senderPeopleId: conversation.participantPeopleId,
+              text: faker.lorem.sentence(15),
+              conversation: conversation._id,
+              sender: conversation.participant.people,
             });
           }
 

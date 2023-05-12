@@ -3,7 +3,7 @@ import People from '../../models/People.js';
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await People.find({});
+    const users = await People.find({}).select('email firstname lastname image _id role');
 
     res.status(200).json({
       message: 'Success!',
@@ -34,13 +34,13 @@ export const changeUserRole = async (req, res) => {
         user,
       });
     } else {
-      throw createError('Your requested user was not found.');
+      throw createError(404, 'Your requested user was not found.');
     }
   } catch (e) {
-    res.status(400).json({
+    res.status(e.status ? e.status : 500).json({
       errors: {
         common: {
-          msg: 'Your requested user was not found.',
+          msg: e.message,
         },
       },
     });

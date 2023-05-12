@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
 const authorizationMiddleware = (panel) => async (req, res, next) => {
   const { authorization } = req.headers;
@@ -7,6 +8,7 @@ const authorizationMiddleware = (panel) => async (req, res, next) => {
   try {
     const token = authorization.replace('Bearer ', '');
     req.user = await jwt.verify(token, JWT_SECRET);
+    req.user._id = new mongoose.Types.ObjectId(req.user._id);
     next();
   } catch (e) {
     res.status(401).json({

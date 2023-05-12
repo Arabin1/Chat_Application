@@ -3,15 +3,21 @@ import Message from './Message.js';
 
 const conversationSchema = new mongoose.Schema(
   {
-    creatorPeopleId: {
-      type: mongoose.Types.ObjectId,
-      required: true,
-      ref: 'People',
+    creator: {
+      people: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'People',
+      },
+      seenAt: Date,
     },
-    participantPeopleId: {
-      type: mongoose.Types.ObjectId,
-      required: true,
-      ref: 'People',
+    participant: {
+      people: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'People',
+      },
+      seenAt: Date,
     },
     deletedBy: {
       type: mongoose.Types.ObjectId,
@@ -25,7 +31,7 @@ conversationSchema.post('findOneAndRemove', async (conversation) => {
   try {
     // Delete all messages associated with the Conversation being deleted
     await Message.deleteMany({
-      conversationId: conversation._id,
+      conversation: conversation._id,
     });
   } catch (err) {
     console.error(err);

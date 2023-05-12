@@ -6,11 +6,11 @@ export const storeMessage = async (req, res) => {
   try {
     let message = new Message({
       text: req.body.text,
-      senderPeopleId: req.user._id,
-      conversationId: req.body.conversationId,
+      sender: req.user._id,
+      conversation: req.body.conversationId,
     });
 
-    message = message.save();
+    message = await message.save();
 
     res.status(200).json({
       msg: 'The message was stored successfully!',
@@ -32,56 +32,21 @@ export const getConversationMessages = async (req, res) => {
     const conversation = await Conversation.findById(req.params.id);
 
     if (!conversation) {
-      throw createError('The conversation was not found!');
+      throw createError(404, 'The conversation was not found!');
     }
 
     if (
-      req.user._id.toString() === conversation.creatorPeopleId.toString() ||
-      req.user._id.toString() === conversation.participantPeopleId.toString()
+      req.user._id.equals(conversation.creator.people) ||
+      req.user._id.equals(conversation.participant.people)
     ) {
-      const messages = await Message.find({ conversationId: req.params.id });
+      const messages = await Message.find({ conversation: req.params.id }).select('-__v');
 
       res.status(200).json({ message: 'Success!', messages });
     } else {
-      throw createError('Unauthenticated!');
+      throw createError(403, 'You are not authorized to access this conversation!');
     }
   } catch (e) {
-    res.status(400).json({
-      errors: {
-        common: {
-          msg: e.message,
-        },
-      },
-    });
-  }
-};
-
-export const deleteMessage = async (req, res) => {
-  try {
-    const conversation = await Conversation.findById(req.params.id);
-
-    if (!conversation) {
-      throw createError('Your requested conversation was not found!');
-    }
-
-    if (
-      req.user._id.toString() === conversation.creatorPeopleId.toString() ||
-      req.user._id.toString() === conversation.participantPeopleId.toString()
-    ) {
-      await Conversation.updateOne(
-        {
-          _id: conversation._id,
-        },
-        {
-          $set: {
-            text: '0a674be',
-            deleted: true,
-          },
-        }
-      );
-    }
-  } catch (e) {
-    res.status(400).json({
+    res.status(e.status ? e.status : 500).json({
       errors: {
         common: {
           msg: e.message,

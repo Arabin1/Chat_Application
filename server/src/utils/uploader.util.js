@@ -4,7 +4,7 @@ import createError from 'http-errors';
 
 const uploader = (subFolderPath, maxFiles, allowedFileTypes, maxFileSize, errorMsg) => {
   // file upload folder
-  const UPLOADS_FOLDER = `$public/uploads/${subFolderPath}`;
+  const UPLOADS_FOLDER = `public/uploads/${subFolderPath}`;
 
   // define the storage
   const storage = multer.diskStorage({
@@ -24,7 +24,6 @@ const uploader = (subFolderPath, maxFiles, allowedFileTypes, maxFileSize, errorM
     storage,
     limits: {
       fileSize: maxFileSize,
-      files: maxFiles,
     },
     fileFilter: (req, file, cb) => {
       if (allowedFileTypes.includes(file.mimetype)) {

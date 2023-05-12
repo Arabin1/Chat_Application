@@ -5,9 +5,10 @@ import * as dotenv from 'dotenv';
 import notFoundHandler from './src/middlewares/common/notFound.middleware.js';
 import errorHandler from './src/middlewares/common/error.middleware.js';
 import authRoute from './src/routes/auth/auth.route.js';
-import userRoute from './src/routes/admin-panel/user.route.js';
 import conversationRoute from './src/routes/user-panel/conversation.route.js';
 import messageRoute from './src/routes/user-panel/message.route.js';
+import adminUserRoute from './src/routes/admin-panel/user.route.js';
+import userRoute from './src/routes/user-panel/user.route.js';
 
 const app = express();
 dotenv.config();
@@ -25,7 +26,7 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// cors oringin
+// cors origin
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 // set static folder
@@ -35,11 +36,12 @@ app.use(express.static('public'));
 app.use('/', authRoute);
 
 // admin routes
-app.use('/admin/user', userRoute);
+app.use('/admin/user', adminUserRoute);
 
 // user routes
 app.use('/user/conversation', conversationRoute);
 app.use('/user/message', messageRoute);
+app.use('/user/user', userRoute);
 
 // not found handler
 app.use(notFoundHandler);

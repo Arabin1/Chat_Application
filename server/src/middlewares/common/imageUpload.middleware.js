@@ -1,17 +1,16 @@
 import uploader from '../../utils/uploader.util.js';
 
-const imageUpload = (folder, maxFiles) => (req, res, next) => {
+const singleImageUpload = (folder, fieldName) => (req, res, next) => {
   const upload = uploader(
     folder,
-    maxFiles,
+    fieldName,
     ['image/jpg', 'image/jpeg', 'image/png'],
 
-    1000000,
+    1024 * 1024,
     'Only .jpg, .jpeg or .png format allowed!'
   );
 
-  // call the middleware function
-  upload.any()(req, res, (err) => {
+  upload.single('image')(req, res, (err) => {
     if (err) {
       if (err.message === 'File too large') {
         res.status(400).json({
@@ -36,4 +35,4 @@ const imageUpload = (folder, maxFiles) => (req, res, next) => {
   });
 };
 
-export default imageUpload;
+export default singleImageUpload;

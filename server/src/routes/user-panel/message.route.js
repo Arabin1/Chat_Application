@@ -1,13 +1,11 @@
 import express from 'express';
 import {
-  messageValidator,
-  messageValidatorHandler,
-} from '../../middlewares/user-panel/message.middleware.js';
-import {
   getConversationMessages,
   storeMessage,
 } from '../../controllers/user-panel/message.controller.js';
 import authorizationMiddleware from '../../middlewares/common/authorization.middleware.js';
+import messageValidator from '../../middlewares/user-panel/message.middleware.js';
+import validatorMiddleware from '../../middlewares/common/validator.middleware.js';
 
 const messageRoute = express.Router();
 
@@ -18,7 +16,7 @@ messageRoute.post(
   '/',
   authorizationMiddleware(panel),
   messageValidator,
-  messageValidatorHandler,
+  validatorMiddleware,
   storeMessage
 );
 

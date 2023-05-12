@@ -26,10 +26,10 @@ export const register = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRY,
     });
 
-    const { password, ...other } = user._doc;
+    const { password, __v, ...other } = user._doc;
     res.status(200).json({
-      user: other,
       message: 'Registration successful!',
+      user: other,
       access_token: token,
     });
   } catch (e) {
@@ -37,7 +37,7 @@ export const register = async (req, res) => {
     res.status(500).json({
       errors: {
         common: {
-          msg: 'Unknown error occurred!',
+          msg: e.message,
         },
       },
     });
@@ -64,21 +64,21 @@ export const login = async (req, res) => {
           expiresIn: process.env.JWT_EXPIRY,
         });
 
-        const { password, ...other } = user._doc;
+        const { password, __v, ...other } = user._doc;
 
         res.status(200).json({
-          user: other,
           message: 'Login successful!',
+          user: other,
           access_token: token,
         });
       } else {
-        throw createError('Invalid email or password.');
+        throw createError(401, 'Invalid email or password.');
       }
     } else {
-      throw createError('Invalid email or password.');
+      throw createError(401, 'Invalid email or password.');
     }
   } catch (e) {
-    res.status(400).json({
+    res.status(e.status ? e.status : 500).json({
       errors: {
         common: {
           msg: e.message,

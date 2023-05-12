@@ -1,2 +1,2 @@
-export const manualOID = '000000000000000000000000';
-export const userImageFolder = 'public/images/user';
+export const userImgFolder = 'users/';
+export const upFolder = 'public/uploads/';
