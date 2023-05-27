@@ -7,7 +7,7 @@ import {
   Firstname,
   Lastname,
   PasswordInput,
-} from "../../components/auth/InputComponet";
+} from "../../components/auth/InputComponent";
 import { Link } from "react-router-dom";
 import MyButton from "../../components/auth/Button";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ const Register = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
 
-  const { errors, loading } = useSelector((state) => state.authReducer);
+  const { errors, loading } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,13 +43,16 @@ const Register = () => {
         <Logo />
         <h2>Register a new Account</h2>
         <span>Welcome! Just register</span>
-        <div className={"name"}>
-          <Firstname
-            helperText={errors?.firstname?.msg}
-            onChange={setFirstname}
-          />
-          <Lastname helperText={errors?.lastname?.msg} onChange={setLastname} />
-        </div>
+        <Firstname
+          helperText={errors?.firstname?.msg}
+          onChange={setFirstname}
+          value={firstname}
+        />
+        <Lastname
+          value={lastname}
+          helperText={errors?.lastname?.msg}
+          onChange={setLastname}
+        />
         <EmailInput helperText={errors?.email?.msg} onChange={setEmail} />
         <PasswordInput
           error={errors?.password}

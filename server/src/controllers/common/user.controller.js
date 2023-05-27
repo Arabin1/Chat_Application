@@ -1,11 +1,36 @@
 import { unlink } from 'fs';
 import createError from 'http-errors';
+import bcrypt from 'bcrypt';
 import People from '../../models/People.js';
 import { upFolder, userImgFolder } from '../../constants/util.constant.js';
+import Conversation from '../../models/Conversation.js';
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await People.find({ role: 'user' }).select('-password -__v');
+    let userConversations = await Conversation.find({
+      $or: [{ 'creator.people': req.user._id }, { 'participant.people': req.user._id }],
+    });
+
+    userConversations = userConversations.filter(
+      (conversation) => !req.user._id.equals(conversation.deletedBy)
+    );
+
+    const excludedUserIds = userConversations.reduce(
+      (ids, conversation) => {
+        const userId = req.user._id.equals(conversation.creator.people)
+          ? conversation.participant.people
+          : conversation.creator.people;
+
+        ids.push(userId);
+        return ids;
+      },
+      [req.user._id]
+    );
+
+    const users = await People.find({
+      role: 'user',
+      _id: { $nin: excludedUserIds },
+    }).select('-password -__v');
 
     res.status(200).json({
       message: 'Success!',
@@ -66,7 +91,7 @@ export const updatePassword = async (req, res) => {
     let user = await People.findById(req.user._id);
 
     if (user) {
-      user.password = req.body.password;
+      user.password = await bcrypt.hash(req.body.password, Number(process.env.SALT));
 
       user = await user.save();
 

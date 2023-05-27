@@ -11,7 +11,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import React from "react";
 import { Email, Lock, People, Person2 } from "@mui/icons-material";
 
-export const EmailInput = ({ onChange, helperText }) => {
+export const EmailInput = ({ onChange, helperText, value }) => {
   return (
     <FormControl
       sx={{ m: 1, width: "100%" }}
@@ -26,6 +26,7 @@ export const EmailInput = ({ onChange, helperText }) => {
         id="outlined-adornment-email"
         type={"email"}
         size={"small"}
+        value={value}
         onChange={(e) => onChange(e.target.value)}
         startAdornment={
           <InputAdornment position="start">
@@ -92,10 +93,10 @@ export const PasswordInput = ({ onChange, label, error, helperText }) => {
   );
 };
 
-export const Firstname = ({ onChange, helperText }) => {
+export const Firstname = ({ onChange, helperText, value }) => {
   return (
     <FormControl
-      sx={{ m: 0, width: "100%" }}
+      sx={{ m: 1, width: "100%" }}
       variant="outlined"
       error={Boolean(helperText)}
       required
@@ -107,6 +108,7 @@ export const Firstname = ({ onChange, helperText }) => {
         id="firstname"
         type={"text"}
         size={"small"}
+        value={value}
         onChange={(e) => onChange(e.target.value)}
         startAdornment={
           <InputAdornment position="start">
@@ -120,10 +122,10 @@ export const Firstname = ({ onChange, helperText }) => {
   );
 };
 
-export const Lastname = ({ onChange, helperText }) => {
+export const Lastname = ({ onChange, helperText, value }) => {
   return (
     <FormControl
-      sx={{ m: 0, width: "100%" }}
+      sx={{ m: 1, width: "100%" }}
       variant="outlined"
       error={Boolean(helperText)}
       required
@@ -135,6 +137,7 @@ export const Lastname = ({ onChange, helperText }) => {
         id="lastname"
         type={"text"}
         size={"small"}
+        value={value}
         onChange={(e) => onChange(e.target.value)}
         startAdornment={
           <InputAdornment position="start">

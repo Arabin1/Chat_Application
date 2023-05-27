@@ -7,10 +7,10 @@ const AuthLayout = ({ children }) => {
     <div className={"auth-layout"}>
       <div className={"main-container"}>
         <Grid container className={"container"}>
-          <Grid item lg={6} minHeight={"100%"}>
+          <Grid item md={6} sm={12} xs={12} minHeight={"100%"}>
             {children}
           </Grid>
-          <Grid item lg={6} minHeight={"100%"}>
+          <Grid item md={6} sm={12} xs={12} minHeight={"100%"}>
             <AddsSection />
           </Grid>
         </Grid>

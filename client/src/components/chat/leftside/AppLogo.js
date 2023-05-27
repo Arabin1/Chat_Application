@@ -7,7 +7,7 @@ import ProfileMenu from "./ProfileMenu";
 
 const AppLogo = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user } = useSelector((state) => state.authReducer.authData);
+  const { user } = useSelector((state) => state.auth.authData);
   const open = Boolean(anchorEl);
 
   const handleClick = (e) => {
@@ -24,7 +24,7 @@ const AppLogo = () => {
         <img
           src={
             user.image
-              ? process.env.REACT_APP_PUBLIC_API_FOLDER + `/user/${user.image}`
+              ? process.env.REACT_APP_IMAGES_FOLDER + `/users/${user.image}`
               : defaultPP
           }
           onClick={handleClick}
@@ -38,12 +38,7 @@ const AppLogo = () => {
         </div>
       </div>
       <LockClock fontSize={"large"} />
-      <ProfileMenu
-        handleClose={handleClose}
-        anchorEl={anchorEl}
-        open={open}
-        image={user.image}
-      />
+      <ProfileMenu handleClose={handleClose} anchorEl={anchorEl} open={open} />
     </div>
   );
 };

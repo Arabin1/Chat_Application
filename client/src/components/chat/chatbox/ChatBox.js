@@ -2,71 +2,84 @@ import React, { useEffect, useState } from "react";
 import "../../../styles/chat/chatbox.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Message from "./Message";
 import {
   getConversationMessages,
   sendMessage,
-} from "../../../redux/api/chat.request";
-import Message from "./Message";
+} from "../../../redux/actions/chat.action";
+import {
+  setMessage,
+  setOpen,
+  setSeverity,
+} from "../../../redux/actions/snackbar.action";
+import About from "../../common/About";
 
-const ChatBox = ({ user, conversationId }) => {
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
-  const { access_token } = useSelector((state) => state.authReducer.authData);
+const ChatBox = () => {
+  const dispatch = useDispatch();
+  const [userMessage, setUserMessage] = useState("");
+  const { messages, selectedConversation } = useSelector((state) => state.chat);
+  const userId = useSelector((state) => state.auth.authData.user._id);
+
+  let renderSeen = true;
 
   useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const { data } = await getConversationMessages(
-          access_token,
-          conversationId
-        );
-        setMessages(data.messages);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    if (user) getMessages();
-  }, [conversationId, access_token, user]);
+    if (selectedConversation._id)
+      dispatch(getConversationMessages(selectedConversation._id));
+  }, [selectedConversation, dispatch]);
 
-  const handleSubmit = async () => {
-    if (message) {
+  const handleSubmit = () => {
+    if (userMessage && userMessage.length < 251) {
       const payload = {
-        text: message,
-        conversationId,
+        text: userMessage,
+        conversationId: selectedConversation._id,
       };
 
-      try {
-        const { data } = await sendMessage(access_token, payload);
-        setMessages([...messages, data.message]);
-        setMessage("");
-      } catch (e) {
-        console.log(e);
-      }
+      dispatch(sendMessage(payload));
+      setUserMessage("");
+    } else if (userMessage) {
+      dispatch(setMessage("Your text is too long to send!"));
+      dispatch(setSeverity("error"));
+      dispatch(setOpen(true));
     }
   };
 
   return (
     <div className={"chat-box"}>
-      {user ? (
+      {selectedConversation._id ? (
         <>
-          <Header
-            image={user.image}
-            firstname={user.firstname}
-            lastname={user.lastname}
-          />
+          <Header />
           <div className={"messages"}>
-            {messages.map((message, index) => (
-              <Message message={message} key={index} receiver={user} />
-            ))}
+            {messages.map((message, index) => {
+              let shouldRenderSeen = false; // We just want to render seen for the latest seen
+              if (
+                renderSeen &&
+                userId === message.sender &&
+                selectedConversation.people.seenAt > message.createdAt
+              ) {
+                shouldRenderSeen = true;
+                renderSeen = false;
+              }
+
+              return (
+                <Message
+                  message={message}
+                  key={index}
+                  receiver={selectedConversation.people}
+                  renderSeen={shouldRenderSeen}
+                />
+              );
+            })}
           </div>
           <Footer
             handleSubmit={handleSubmit}
-            message={message}
-            setMessage={setMessage}
+            message={userMessage}
+            setMessage={setUserMessage}
           />
         </>
-      ) : null}
+      ) : (
+        <About />
+      )}
     </div>
   );
 };
