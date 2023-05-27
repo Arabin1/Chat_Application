@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import "../../styles/auth.css";
 import AuthLayout from "../../components/auth/AuthLayout";
-import { EmailInput, PasswordInput } from "../../components/auth/InputComponet";
+import {
+  EmailInput,
+  PasswordInput,
+} from "../../components/auth/InputComponent";
 import Logo from "../../components/auth/Logo";
 import MyButton from "../../components/auth/Button";
 import { Link } from "react-router-dom";
@@ -9,6 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/auth.action";
 import { Alert, Collapse, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import {
+  setMessage,
+  setOpen,
+  setSeverity,
+} from "../../redux/actions/snackbar.action";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,7 +24,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState(true);
 
-  const { errors, loading } = useSelector((state) => state.authReducer);
+  const { errors, loading } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,16 +44,27 @@ const Login = () => {
         <Logo />
         <h2>Log into your Account</h2>
         <span>Welcome back! Just log in</span>
-        <EmailInput helperText={errors?.email?.msg} onChange={setEmail} />
+        <EmailInput value={email} helperText={false} onChange={setEmail} />
         <PasswordInput
-          error={errors?.password}
-          helperText={errors?.password?.msg}
+          error={false}
           onChange={setPassword}
           label={"Password"}
         />
         <div className={"remember-section"}>
           <Link to={"#"} className={"link"}>
-            Forgot password?
+            <span
+              onClick={() => {
+                dispatch(
+                  setMessage(
+                    "Coming Soon! This feature will be available in the future."
+                  )
+                );
+                dispatch(setSeverity("info"));
+                dispatch(setOpen(true));
+              }}
+            >
+              Forgot password?
+            </span>
           </Link>
         </div>
         <MyButton loading={loading}>Log in</MyButton>

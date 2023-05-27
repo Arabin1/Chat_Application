@@ -23,6 +23,10 @@ const conversationSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'People',
     },
+    lastMessageDate: {
+      type: Date,
+      default: new Date(),
+    },
   },
   { timestamps: true }
 );

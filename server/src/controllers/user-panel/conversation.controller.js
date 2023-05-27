@@ -2,17 +2,8 @@ import createError from 'http-errors';
 import Conversation from '../../models/Conversation.js';
 import Message from '../../models/Message.js';
 
-const aggregateConversations = async (conversationId, userId, isCons = false) => {
-  let matchStage;
-  if (isCons) {
-    matchStage = {
-      $or: [{ 'creator.people': userId }, { 'participant.people': userId }],
-    };
-  } else {
-    matchStage = { _id: conversationId };
-  }
-
-  return Conversation.aggregate([
+const aggregateConversations = async (matchStage, userId) =>
+  Conversation.aggregate([
     {
       $match: matchStage,
     },
@@ -30,6 +21,19 @@ const aggregateConversations = async (conversationId, userId, isCons = false) =>
         localField: 'participant.people',
         foreignField: '_id',
         as: 'participantPeople',
+      },
+    },
+    {
+      $lookup: {
+        from: 'messages',
+        let: { conversationId: '$_id' },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$conversation', '$$conversationId'] } } },
+          { $sort: { createdAt: -1 } },
+          { $limit: 1 },
+          { $project: { __v: 0 } },
+        ],
+        as: 'latestMessage',
       },
     },
     {
@@ -58,9 +62,14 @@ const aggregateConversations = async (conversationId, userId, isCons = false) =>
             },
           ],
         },
+        creator: 1,
+        participant: 1,
+        _id: 1,
         createdAt: 1,
         updatedAt: 1,
         deletedBy: 1,
+        lastMessageDate: 1,
+        message: { $arrayElemAt: ['$latestMessage', 0] },
       },
     },
     {
@@ -84,13 +93,21 @@ const aggregateConversations = async (conversationId, userId, isCons = false) =>
             },
           ],
         },
+        seenAt: {
+          $cond: [{ $ifNull: ['$creatorPeople', false] }, '$participant.seenAt', '$creator.seenAt'],
+        },
+        _id: 1,
         createdAt: 1,
         updatedAt: 1,
         deletedBy: 1,
+        lastMessageDate: 1,
+        message: 1,
       },
     },
+    {
+      $sort: { lastMessageDate: -1 },
+    },
   ]);
-};
 
 export const createConversation = async (req, res) => {
   try {
@@ -116,7 +133,9 @@ export const createConversation = async (req, res) => {
         }
       );
 
-      conversation = await aggregateConversations(conversation._id, req.user._id);
+      const matchStage = { _id: conversation._id };
+
+      conversation = await aggregateConversations(matchStage, req.user._id);
 
       return res.status(200).json({
         message: 'Successfully created a new conversation!',
@@ -131,7 +150,9 @@ export const createConversation = async (req, res) => {
 
     conversation = await conversation.save();
 
-    conversation = await aggregateConversations(conversation._id, req.user._id);
+    const matchStage = { _id: conversation._id };
+
+    conversation = await aggregateConversations(matchStage, req.user._id);
 
     return res.status(200).json({
       message: 'Successfully created a new conversation!',
@@ -150,7 +171,11 @@ export const createConversation = async (req, res) => {
 
 export const getUserConversations = async (req, res) => {
   try {
-    let conversations = await aggregateConversations(false, req.user._id, true);
+    const matchStage = {
+      $or: [{ 'creator.people': req.user._id }, { 'participant.people': req.user._id }],
+    };
+
+    let conversations = await aggregateConversations(matchStage, req.user._id);
 
     conversations = conversations.filter(
       (conversation) => !req.user._id.equals(conversation.deletedBy)
@@ -204,9 +229,13 @@ export const updateSeen = async (req, res) => {
       throw createError(403, 'You are not authorized to access this conversation.');
     }
 
+    const matchStage = { _id: conversation._id };
+
+    conversation = await aggregateConversations(matchStage, req.user._id);
+
     return res.status(200).json({
       message: 'Success!',
-      conversation,
+      conversation: conversation[0],
     });
   } catch (e) {
     return res.status(e.status ? e.status : 500).json({
@@ -250,6 +279,7 @@ export const deleteConversation = async (req, res) => {
 
         await Message.updateMany(
           {
+            sender: req.user._id,
             conversation: conversation._id,
           },
           {

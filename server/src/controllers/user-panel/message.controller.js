@@ -12,9 +12,17 @@ export const storeMessage = async (req, res) => {
 
     message = await message.save();
 
+    // update the conversation so that we can sort it
+    await Conversation.updateOne(
+      { _id: req.body.conversationId },
+      { $set: { lastMessageDate: Date.now() } }
+    );
+
+    const { __v, ...other } = message._doc;
+
     res.status(200).json({
       msg: 'The message was stored successfully!',
-      message,
+      message: other,
     });
   } catch (e) {
     res.status(500).json({
@@ -39,7 +47,9 @@ export const getConversationMessages = async (req, res) => {
       req.user._id.equals(conversation.creator.people) ||
       req.user._id.equals(conversation.participant.people)
     ) {
-      const messages = await Message.find({ conversation: req.params.id }).select('-__v');
+      const messages = await Message.find({ conversation: req.params.id })
+        .sort({ createdAt: -1 })
+        .select('-__v');
 
       res.status(200).json({ message: 'Success!', messages });
     } else {

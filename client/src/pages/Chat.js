@@ -1,67 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import ChatBox from "../components/chat/chatbox/ChatBox";
 import "../styles/chat/chat.css";
 import AppLogo from "../components/chat/leftside/AppLogo";
 import SearchBar from "../components/chat/leftside/SearchBar";
-import { useEffect, useState } from "react";
-import { getUserConversations } from "../redux/api/chat.request";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Conversation from "../components/chat/leftside/Conversation";
-import Footer from "../components/chat/leftside/Footer";
+import AddContactButton from "../components/chat/leftside/AddContactButton";
+import {
+  getUserConversations,
+  setSelectedConversation,
+} from "../redux/actions/chat.action";
 
 const Chat = () => {
-  const [conversations, setConversations] = useState([]);
-  const [selectedConversationId, setSelectedConversationId] = useState("");
-  const [chatBoxUser, setChatBoxUser] = useState(null);
-
-  const { authData } = useSelector((state) => state.authReducer);
+  const dispatch = useDispatch();
+  const { conversations } = useSelector((state) => state.chat);
+  const [filteredConversation, setFilteredConversation] = useState([]);
 
   useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const { data } = await getUserConversations(authData.access_token);
-        setConversations(data.conversations);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getConversations();
-  }, [authData]);
+    dispatch(getUserConversations());
+  }, [dispatch]);
 
-  const handleClick = (conversation) => {
-    setSelectedConversationId(conversation._id);
-    const { user } = authData;
-    if (conversation.creatorPeopleId._id === user._id) {
-      setChatBoxUser(conversation.participantPeopleId);
-    } else {
-      setChatBoxUser(conversation.creatorPeopleId);
-    }
+  useEffect(() => {
+    setFilteredConversation(conversations);
+  }, [conversations]);
+
+  const handleOnChange = (value) => {
+    const cons = conversations.filter((conversation) => {
+      const name = (
+        conversation.people.firstname +
+        " " +
+        conversation.people.lastname
+      ).toLowerCase();
+      return name.indexOf(value.toLowerCase()) > -1;
+    });
+
+    setFilteredConversation(cons);
   };
 
   return (
     <Grid container>
-      <Grid item sm={4} xs={12}>
+      <Grid item lg={1} />
+      <Grid item xl={3} lg={4} md={4} sm={5} xs={12}>
         <div className={"left-side"}>
           <AppLogo />
-          <SearchBar />
+          <SearchBar onChange={handleOnChange} />
           <div className={"conversations"}>
-            {conversations.map((conversation, id) => (
-              <div key={id} onClick={() => handleClick(conversation)}>
+            {filteredConversation.map((conversation, id) => (
+              <div
+                key={id}
+                onClick={() => dispatch(setSelectedConversation(conversation))}
+              >
                 <Conversation
                   conversation={conversation}
-                  online={true}
-                  selected={conversation._id === selectedConversationId}
+                  online={Boolean(id % 2)}
                 />
               </div>
             ))}
           </div>
-          <Footer />
+          <AddContactButton />
         </div>
       </Grid>
-      <Grid item sm={8} xs={12}>
-        <ChatBox user={chatBoxUser} conversationId={selectedConversationId} />
+      <Grid item xl={7} lg={6} md={8} sm={7} xs={12}>
+        <ChatBox />
       </Grid>
+      <Grid item lg={1} />
     </Grid>
   );
 };

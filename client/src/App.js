@@ -1,16 +1,28 @@
 import "./App.css";
 import Login from "./pages/auth/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Chat from "./pages/Chat";
 import Register from "./pages/auth/Register";
+import SnackBar from "./components/common/SnakBar";
+import React from "react";
+import { setOpen } from "./redux/actions/snackbar.action";
 
 function App() {
-  const authData = useSelector((state) => state.authReducer.authData);
-  const { theme } = useSelector((state) => state.settingReducer);
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth.authData);
+  const { theme } = useSelector((state) => state.setting);
+  const { open, message, severity } = useSelector((state) => state.snackbar);
 
   return (
     <div className={`theme-${theme}`}>
+      <SnackBar
+        open={open}
+        handleClose={() => dispatch(setOpen(false))}
+        severity={severity}
+      >
+        {message}
+      </SnackBar>
       <Routes>
         <Route
           path={"/"}

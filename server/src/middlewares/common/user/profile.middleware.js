@@ -6,11 +6,15 @@ const profileValidator = [
   check('firstname')
     .isLength({ min: 2 })
     .withMessage('First name must be at least 2 characters.')
+    .isAlpha('en-US', { ignore: ' .' })
+    .withMessage('First name should only contain alphabets, spaces or dot(.).')
     .isLength({ max: 25 })
     .withMessage('Maximum 25 characters for first name.'),
   check('lastname')
     .isLength({ min: 2 })
     .withMessage('Last name must be at least 2 characters.')
+    .isAlpha('en-US', { ignore: ' ' })
+    .withMessage('Last name should only contain alphabets, spaces or dot(.).')
     .isLength({ max: 25 })
     .withMessage('Maximum 25 characters for last name.'),
   check('email')

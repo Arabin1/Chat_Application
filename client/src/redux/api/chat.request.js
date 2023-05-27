@@ -1,55 +1,15 @@
-import axios from "axios";
+import { API } from "../constants";
 
-export const getUserConversations = (token) => {
-  const API = axios.create({
-    baseURL: process.env.REACT_APP_BASE_API_URL,
-  });
-  API.interceptors.request.use(
-    function (config) {
-      config.headers.Authorization = `Bearer ${token}`;
+export const getUserConversations = () => API.get("/user/conversation");
 
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
-    }
-  );
+export const createConversation = (data) =>
+  API.post("/user/conversation", data);
 
-  return API.get("/user/conversation");
-};
+export const getConversationMessages = (id) => API.get(`user/message/${id}`);
 
-export const getConversationMessages = (token, id) => {
-  const API = axios.create({
-    baseURL: process.env.REACT_APP_BASE_API_URL,
-  });
-  API.interceptors.request.use(
-    function (config) {
-      config.headers.Authorization = `Bearer ${token}`;
+export const sendMessage = (data) => API.post("/user/message/", data);
 
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
-    }
-  );
+export const updateSeenOfConversation = (id) =>
+  API.put(`/user/conversation/${id}`);
 
-  return API.get(`user/message/${id}`);
-};
-
-export const sendMessage = (token, data) => {
-  const API = axios.create({
-    baseURL: process.env.REACT_APP_BASE_API_URL,
-  });
-  API.interceptors.request.use(
-    function (config) {
-      config.headers.Authorization = `Bearer ${token}`;
-
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
-    }
-  );
-
-  return API.post("/user/message/", data);
-};
+export const deleteConversation = (id) => API.delete(`user/conversation/${id}`);

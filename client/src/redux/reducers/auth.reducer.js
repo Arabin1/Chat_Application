@@ -6,6 +6,7 @@ const authReducer = (
     loading: false,
     error: false,
     errors: null,
+    dialogOpen: false,
   },
   action
 ) => {
@@ -31,9 +32,22 @@ const authReducer = (
         error: true,
         errors: action.data?.errors,
       };
-    case AUTH.LOG_OUT:
-      localStorage.clear();
-      return { ...state, loading: false, error: false, authData: null };
+    case AUTH.UPDATE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        errors: null,
+        authData: { ...state.authData, user: action.data },
+        dialogOpen: false,
+      };
+    case AUTH.SET_AUTH_DIALOG:
+      return {
+        ...state,
+        error: false,
+        errors: null,
+        dialogOpen: action.data,
+      };
     default:
       return state;
   }

@@ -1,35 +1,58 @@
 /*For default theme*/
 :root {
-  --text-color: #fff;
-  --bg-color: #3f8cdf;
-  --bg-deep-color: #0776e8;
-  --bg-chatbox-color: #e5e9ea;
+  --text-color: #727473;
+  --bg-color: #fff;
+  --bg-chatbox-color: #fff;
+  --sender-text-color: #fff;
+  --sender-bg-color: #007bff;
   --receiver-text-color: #727473;
-  --receiver-bg-color: #fff;
-  --active-status-color: #ffc107;
+  --receiver-bg-color: #f1f1f1;
+  --active-status-color: #1877f2;
+  --border-color: #f3f3f3;
+  --hover-color: #e6f2ff;
+  --selected-color: #f1f0f0;
+  --placeholder-color: #ccc;
   --auth-m-bg-color: #e5e9ea;
   --auth-bg-color: #fff;
   --auth-title-color: #000;
   --auth-text-color: #727473;
-  --auth-bg-color2: #3f8cdf;
+  --auth-bg-color2: #007bff;
   --auth-text-color2: #fff;
   --auth-text-color3: #e5e9ea;
+  --button-color: #007bff;
+  --button-hover-color: #0056b3;
+  --button-text-color: #fff;
+  background-color: #e5e9ea;
 }
 
 /*For dark theme*/
 .theme-dark {
-  --text-color: #fff;
+  --text-color: #e5e5e5;
   --bg-color: #2b3c4e;
-  --bg-deep-color: #30455a;
-  --bg-chatbox-color: #e5e9ea;
-  --receiver-text-color: #727473;
-  --receiver-bg-color: #fff;
-  --active-status-color: #ffc107;
+  --bg-chatbox-color: #2b3c4e;
+  --sender-text-color: #fff;
+  --sender-bg-color: #007bff;
+  --receiver-text-color: #fff;
+  --receiver-bg-color: #1f2836;
+  --active-status-color: #1877f2;
+  --border-color: #1c2a3c;
+  --hover-color: #475f7e;
+  --selected-color: #1f2a37;
+  --placeholder-color: #566679;
   --auth-m-bg-color: #e5e9ea;
   --auth-bg-color: #fff;
   --auth-title-color: #000;
   --auth-text-color: #727473;
-  --auth-bg-color2: #3f8cdf;
+  --auth-bg-color2: #007bff;
   --auth-text-color2: #fff;
   --auth-text-color3: #e5e9ea;
+  --button-color: #007bff;
+  --button-hover-color: #0056b3;
+  --button-text-color: #fff;
+  background-color: #475a6f;
+}
+
+::selection {
+  background-color: #e6e6e6;
+  color: #000;
 }
