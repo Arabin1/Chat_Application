@@ -11,136 +11,29 @@
 
 .app-logo {
   display: flex;
-  padding: 15px 20px 10px 30px;
-  justify-content: space-between;
+  padding: 15px 10px 10px 15px;
   align-items: center;
   width: 100%;
   gap: 8px;
 }
 
+.app-logo > button > svg {
+  color: var(--text-color);
+}
+
 .app-logo > .user-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
   flex: 1;
   overflow: hidden;
-  align-items: center;
 }
 
 .user-info > div {
   flex: 1;
   overflow: hidden;
-}
-
-.app-logo > svg {
-  color: var(--text-color);
-}
-
-.conversations {
-  flex-grow: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin-top: 2px;
-  width: 100%;
-}
-
-.user-info,
-.conversation {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  width: 100%;
-}
-
-.conversation {
-  position: relative;
-  padding: 15px 20px 15px 15px;
-  width: 100%;
-  margin: 2px 0;
-}
-
-.online-dot {
-  background-color: var(--active-status-color);
-  border-radius: 50%;
-  position: absolute;
-  left: 52px;
-  bottom: 16px;
-  width: 12px !important;
-  height: 12px;
-}
-
-.conversation:hover {
-  background-color: var(--hover-color);
-  cursor: pointer;
-}
-
-.selected-conversation {
-  background-color: var(--selected-color);
-}
-
-.user-info > img,
-.conversation > img {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  background-size: contain;
-  cursor: pointer;
-}
-
-.user-info > div,
-.conversation > div {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  width: 100%;
-}
-
-.conversation > div {
-  flex: 1;
-  overflow: hidden;
-}
-
-.conversation > .not-seen,
-.not-seen > h3 {
-  font-weight: bold !important;
-}
-
-.conversation > div > h3 {
-  margin: 0;
-  padding: 0;
-  text-overflow: ellipsis;
-  color: var(--text-color);
-  font-weight: normal;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.bold-text {
-  font-weight: bold !important;
-}
-
-.bold-text > h3 {
-  font-weight: bold !important;
-}
-
-.seen-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 4px;
-  align-items: center;
-}
-
-.seen-container > span {
-  flex: 1;
-  text-overflow: ellipsis;
-  color: var(--text-color);
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 14px;
-}
-
-.seen-img {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-size: contain;
 }
 
 .user-info > div > h3 {
@@ -160,12 +53,98 @@
   font-size: 14px;
 }
 
+.conversations {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 2px;
+  width: 100%;
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  position: relative;
+  padding: 15px 20px 15px 15px;
+  margin: 2px 0;
+}
+
+.conversation:hover {
+  background-color: var(--hover-color);
+  cursor: pointer;
+}
+
+.conversation > .not-seen,
+.not-seen > h3 {
+  font-weight: bold !important;
+}
+
+.conversation > .con-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+}
+
+.conversation > .con-detail > h3 {
+  margin: 0;
+  padding: 0;
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  font-weight: normal;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.conversation > .bold-text {
+  font-weight: bold !important;
+}
+
+.bold-text > h3 {
+  font-weight: bold !important;
+}
+
+.selected-conversation {
+  background-color: var(--selected-color);
+}
+
+.seen-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  align-items: center;
+}
+
+.seen-container > span {
+  flex: 1;
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.online-dot {
+  background-color: var(--active-status-color);
+  border-radius: 50%;
+  position: absolute;
+  left: 52px;
+  bottom: 16px;
+  width: 12px !important;
+  height: 12px;
+  z-index: 1000;
+}
+
 .search-bar-container {
   padding: 10px 20px 10px 15px;
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 8px;
+  margin-top: 2px;
 }
 
 .search-bar-container > svg {
@@ -235,21 +214,14 @@
   background-color: var(--hover-color);
 }
 
-.contact-user > img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background-size: contain;
-}
-
-.contact-user > div {
+.contact-user > .u-detail {
   display: flex;
   overflow: hidden;
   flex: 1;
   flex-direction: column;
 }
 
-.contact-user > div > h4 {
+.u-detail > h4 {
   font-weight: normal;
   margin: 0;
   padding: 0;
@@ -259,10 +231,63 @@
   color: var(--text-color);
 }
 
-.contact-user > div > span {
+.u-detail > span {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   font-size: 12px;
   color: var(--text-color);
+}
+
+.about-me {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px 10px;
+}
+
+.about-me > h3 {
+  color: var(--text-color);
+  padding: 0;
+  margin: 4px 0;
+  text-align: center;
+}
+
+.about-me > p {
+  color: var(--text-color);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  width: 250px;
+}
+
+.about-me > span {
+  color: var(--text-color);
+  margin: 4px 0;
+  text-align: center;
+}
+
+.about-me > span > a {
+  color: var(--link-color);
+}
+
+.about-me > span > a:hover {
+  color: var(--link-hover);
+}
+
+@media (max-width: 650px) {
+  .app-logo {
+    padding: 15px 5px 20px 15px;
+  }
+
+  .add-contact {
+    right: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .about-me > p {
+    width: 240px;
+  }
 }

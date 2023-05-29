@@ -20,8 +20,9 @@ const Settings = ({ closeDialog }) => {
   const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.setting);
 
-  const handleToggleSidebar = () => {
-    setSideBar(!sideBar);
+  const handleSelection = (value) => {
+    if (isSmallScreen) setSideBar(false);
+    setSelectedItem(value);
   };
 
   useEffect(() => {
@@ -33,36 +34,42 @@ const Settings = ({ closeDialog }) => {
       <Grid container className={"setting-container"}>
         {isSmallScreen && (
           <Grid item xs={12}>
-            <IconButton onClick={handleToggleSidebar}>
+            <IconButton onClick={() => setSideBar(!sideBar)}>
               <MenuIcon />
             </IconButton>
           </Grid>
         )}
         {sideBar && (
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={4} xxs={12}>
             <ul className={"list"}>
               <li
                 className={selectedItem === "Edit-Profile" ? "selected" : ""}
-                onClick={() => setSelectedItem("Edit-Profile")}
+                onClick={() => handleSelection("Edit-Profile")}
               >
                 Edit Profile
               </li>
               <li
                 className={selectedItem === "Change-Password" ? "selected" : ""}
-                onClick={() => setSelectedItem("Change-Password")}
+                onClick={() => handleSelection("Change-Password")}
               >
                 Change Password
               </li>
               <li
                 className={selectedItem === "Theme" ? "selected" : ""}
-                onClick={() => setSelectedItem("Theme")}
+                onClick={() => handleSelection("Theme")}
               >
                 Theme
               </li>
             </ul>
           </Grid>
         )}
-        <Grid item xs={12} md={sideBar ? 8 : 12} className={"setting-right"}>
+        <Grid
+          item
+          xss={12}
+          xs={12}
+          sm={sideBar ? 8 : 12}
+          className={"setting-right"}
+        >
           {selectedItem === "Edit-Profile" && (
             <EditProfile closeDialog={closeDialog} />
           )}
@@ -70,15 +77,22 @@ const Settings = ({ closeDialog }) => {
             <EditPassword closeDialog={closeDialog} />
           )}
           {selectedItem === "Theme" && (
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={theme !== "default"}
-                  onChange={() => dispatch(changeTheme())}
-                />
-              }
-              label="Dark Mode"
-            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={theme !== "default"}
+                    onChange={() => dispatch(changeTheme())}
+                  />
+                }
+                label="Dark Mode"
+              />
+            </div>
           )}
         </Grid>
       </Grid>

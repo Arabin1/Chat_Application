@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // cors origin
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(cors({ origin: [process.env.CORS_ORIGIN, 'http://192.168.0.103:3000'] }));
 
 // set static folder
 app.use(express.static('public'));

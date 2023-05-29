@@ -42,13 +42,6 @@
   margin-bottom: 10px;
 }
 
-.img-container > img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-size: contain;
-}
-
 .img-container > .upload-button {
   position: absolute;
   right: 2px;
@@ -58,4 +51,16 @@
 .setting-form > button {
   width: 100%;
   margin-top: 15px;
+}
+
+@media (max-width: 575px) {
+  .list {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .setting-form {
+    padding: 10px 0;
+  }
 }

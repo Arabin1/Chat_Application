@@ -13,20 +13,27 @@ import {
   setOpen,
   setSeverity,
 } from "../../../redux/actions/snackbar.action";
-import About from "../../common/About";
+import BlankBox from "../../common/BlankBox";
+import { ChatBubble, MessageRounded } from "@mui/icons-material";
+import Progress from "../../common/Progress";
+import { useNavigate } from "react-router-dom";
 
 const ChatBox = () => {
   const dispatch = useDispatch();
   const [userMessage, setUserMessage] = useState("");
-  const { messages, selectedConversation } = useSelector((state) => state.chat);
+  const { messages, selectedConversation, loadingMsg } = useSelector(
+    (state) => state.chat
+  );
   const userId = useSelector((state) => state.auth.authData.user._id);
+  const navigate = useNavigate();
 
   let renderSeen = true;
 
   useEffect(() => {
     if (selectedConversation._id)
       dispatch(getConversationMessages(selectedConversation._id));
-  }, [selectedConversation, dispatch]);
+    else navigate("/chat");
+  }, [selectedConversation, dispatch, navigate]);
 
   const handleSubmit = () => {
     if (userMessage && userMessage.length < 251) {
@@ -49,28 +56,38 @@ const ChatBox = () => {
       {selectedConversation._id ? (
         <>
           <Header />
-          <div className={"messages"}>
-            {messages.map((message, index) => {
-              let shouldRenderSeen = false; // We just want to render seen for the latest seen
-              if (
-                renderSeen &&
-                userId === message.sender &&
-                selectedConversation.people.seenAt > message.createdAt
-              ) {
-                shouldRenderSeen = true;
-                renderSeen = false;
-              }
+          {messages.length === 0 ? (
+            loadingMsg ? (
+              <Progress size={30} />
+            ) : (
+              <BlankBox text={"Start sending private message!"}>
+                <MessageRounded fontSize={"large"} />
+              </BlankBox>
+            )
+          ) : (
+            <div className={"messages"}>
+              {messages.map((message, index) => {
+                let shouldRenderSeen = false; // We just want to render seen for the latest seen
+                if (
+                  renderSeen &&
+                  userId === message.sender &&
+                  selectedConversation.people.seenAt > message.createdAt
+                ) {
+                  shouldRenderSeen = true;
+                  renderSeen = false;
+                }
 
-              return (
-                <Message
-                  message={message}
-                  key={index}
-                  receiver={selectedConversation.people}
-                  renderSeen={shouldRenderSeen}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <Message
+                    message={message}
+                    key={index}
+                    receiver={selectedConversation.people}
+                    renderSeen={shouldRenderSeen}
+                  />
+                );
+              })}
+            </div>
+          )}
           <Footer
             handleSubmit={handleSubmit}
             message={userMessage}
@@ -78,7 +95,9 @@ const ChatBox = () => {
           />
         </>
       ) : (
-        <About />
+        <BlankBox text={"Send private message to your friend!"}>
+          <ChatBubble fontSize={"large"} />
+        </BlankBox>
       )}
     </div>
   );

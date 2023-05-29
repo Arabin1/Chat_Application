@@ -3,7 +3,7 @@ import { EmailInput, Firstname, Lastname } from "../auth/InputComponent";
 import { useDispatch, useSelector } from "react-redux";
 import defaultPP from "../../assets/default/defaultProfile.jpg";
 import MyButton from "../auth/Button";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar as MUIAvatar, IconButton } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { updateProfile } from "../../redux/actions/auth.action";
 import {
@@ -11,6 +11,7 @@ import {
   setOpen,
   setSeverity,
 } from "../../redux/actions/snackbar.action";
+import Avatar from "../common/Avatar";
 
 const EditProfile = () => {
   const { errors, loading } = useSelector((state) => state.auth);
@@ -58,7 +59,7 @@ const EditProfile = () => {
   return (
     <form className={"setting-form"} onSubmit={handleSubmit}>
       <div className={"img-container"}>
-        <img
+        <Avatar
           src={
             selectedImage
               ? URL.createObjectURL(selectedImage)
@@ -67,6 +68,8 @@ const EditProfile = () => {
               : defaultPP
           }
           alt={user.firstname}
+          width={120}
+          height={120}
         />
         <div className={"upload-button"}>
           <IconButton
@@ -75,7 +78,7 @@ const EditProfile = () => {
             size={"small"}
             onClick={() => fileInputRef.current.click()}
           >
-            <Avatar>
+            <MUIAvatar>
               <PhotoCamera fontSize={"small"} />
               <input
                 ref={fileInputRef}
@@ -84,22 +87,20 @@ const EditProfile = () => {
                 onChange={handleUpload}
                 accept="image/*"
               />
-            </Avatar>
+            </MUIAvatar>
           </IconButton>
         </div>
       </div>
-      <div className={"name"}>
-        <Firstname
-          helperText={errors?.firstname?.msg}
-          onChange={setFirstname}
-          value={firstname}
-        />
-        <Lastname
-          value={lastname}
-          helperText={errors?.lastname?.msg}
-          onChange={setLastname}
-        />
-      </div>
+      <Firstname
+        helperText={errors?.firstname?.msg}
+        onChange={setFirstname}
+        value={firstname}
+      />
+      <Lastname
+        value={lastname}
+        helperText={errors?.lastname?.msg}
+        onChange={setLastname}
+      />
       <EmailInput
         value={email}
         onChange={setEmail}

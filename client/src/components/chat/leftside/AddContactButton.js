@@ -17,6 +17,9 @@ const AddContactButton = () => {
           aria-label="avatar"
           size={"small"}
           onClick={() => dispatch(setAddUserDialog(true))}
+          sx={{
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.2))",
+          }}
         >
           <Avatar>
             <PersonAdd fontSize={"medium"} />
