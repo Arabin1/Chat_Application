@@ -13,6 +13,7 @@ import {
   createConversation,
   setAddUserDialog,
 } from "../../../redux/actions/chat.action";
+import Avatar from "../../common/Avatar";
 
 function CustomDialogTitle(props) {
   const { children, onClose, ...other } = props;
@@ -99,7 +100,7 @@ export default function AddContact() {
               key={index}
               onClick={() => handleClick(user._id)}
             >
-              <img
+              <Avatar
                 src={
                   user.image
                     ? process.env.REACT_APP_IMAGES_FOLDER +
@@ -107,8 +108,10 @@ export default function AddContact() {
                     : defaultPP
                 }
                 alt={user.firstname}
+                width={45}
+                height={45}
               />
-              <div>
+              <div className={"u-detail"}>
                 <h4>
                   {user.firstname} {user.lastname}
                 </h4>

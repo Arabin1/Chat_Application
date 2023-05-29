@@ -2,13 +2,13 @@
 :root {
   --text-color: #727473;
   --bg-color: #fff;
-  --bg-chatbox-color: #fff;
+  --bg-chatbox-color: #f9f9f9;
   --sender-text-color: #fff;
   --sender-bg-color: #007bff;
   --receiver-text-color: #727473;
   --receiver-bg-color: #f1f1f1;
   --active-status-color: #1877f2;
-  --border-color: #f3f3f3;
+  --border-color: #e0e0e0;
   --hover-color: #e6f2ff;
   --selected-color: #f1f0f0;
   --placeholder-color: #ccc;
@@ -19,6 +19,8 @@
   --auth-bg-color2: #007bff;
   --auth-text-color2: #fff;
   --auth-text-color3: #e5e9ea;
+  --link-color: #007bff;
+  --link-hover: #0056b3;
   --button-color: #007bff;
   --button-hover-color: #0056b3;
   --button-text-color: #fff;
@@ -46,10 +48,15 @@
   --auth-bg-color2: #007bff;
   --auth-text-color2: #fff;
   --auth-text-color3: #e5e9ea;
+  --link-color: #ccc;
+  --link-hover: #fff;
   --button-color: #007bff;
   --button-hover-color: #0056b3;
   --button-text-color: #fff;
   background-color: #475a6f;
+  max-height: 100vh;
+  overflow-y: hidden;
+  overflow-anchor: inherit;
 }
 
 ::selection {

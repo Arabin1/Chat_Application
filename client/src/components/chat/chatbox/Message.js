@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 import defaultPP from "../../../assets/default/defaultProfile.jpg";
+import Avatar from "../../common/Avatar";
 
 const Message = ({ message, receiver, renderSeen }) => {
   const { user } = useSelector((state) => state.auth.authData);
@@ -12,7 +13,7 @@ const Message = ({ message, receiver, renderSeen }) => {
     <div className={isReceivedMsg ? "receiver" : "sender"}>
       <div>
         {isReceivedMsg && (
-          <img
+          <Avatar
             src={
               receiver.image
                 ? process.env.REACT_APP_IMAGES_FOLDER +
@@ -20,6 +21,8 @@ const Message = ({ message, receiver, renderSeen }) => {
                 : defaultPP
             }
             alt=""
+            width={45}
+            height={45}
           />
         )}
         <div>
@@ -31,8 +34,7 @@ const Message = ({ message, receiver, renderSeen }) => {
           <div className={"m-details"}>
             <span>{format(message.updatedAt)}</span>
             {renderSeen && (
-              <img
-                className={"seen-img"}
+              <Avatar
                 src={
                   receiver.image
                     ? process.env.REACT_APP_IMAGES_FOLDER +
@@ -40,6 +42,8 @@ const Message = ({ message, receiver, renderSeen }) => {
                     : defaultPP
                 }
                 alt={receiver.firstname}
+                width={14}
+                height={14}
               />
             )}
           </div>

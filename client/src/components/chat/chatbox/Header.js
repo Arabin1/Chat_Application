@@ -1,7 +1,7 @@
 import React from "react";
 import defaultPP from "../../../assets/default/defaultProfile.jpg";
-import { Delete } from "@mui/icons-material";
-import { Avatar, IconButton } from "@mui/material";
+import { ArrowBack, Delete } from "@mui/icons-material";
+import { IconButton, Avatar as MUIAvatar, useMediaQuery } from "@mui/material";
 import ToolTip from "../Tooltip";
 import AlertDialog from "../../common/AlertDialog";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,26 +9,39 @@ import {
   deleteConversation,
   setDeleteUserDialog,
 } from "../../../redux/actions/chat.action";
+import Avatar from "../../common/Avatar";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { selectedConversation, deleteDialogOpen } = useSelector(
     (state) => state.chat
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   const { people } = selectedConversation;
 
   return (
     <div className={"header"}>
+      {isSmallScreen && (
+        <div style={{ paddingLeft: "-5px" }}>
+          <IconButton onClick={() => navigate("/chat")}>
+            <ArrowBack />
+          </IconButton>
+        </div>
+      )}
       <div className={"user"}>
         <div className={"online-dot-box"} />
-        <img
+        <Avatar
           src={
             people.image
               ? process.env.REACT_APP_IMAGES_FOLDER + `/users/${people.image}`
               : defaultPP
           }
           alt={people.firstname}
+          width={55}
+          height={55}
         />
         <div>
           <h3>
@@ -39,9 +52,9 @@ const Header = () => {
       </div>
       <ToolTip title={"Delete this conversation"}>
         <IconButton onClick={() => dispatch(setDeleteUserDialog(true))}>
-          <Avatar>
+          <MUIAvatar>
             <Delete />
-          </Avatar>
+          </MUIAvatar>
         </IconButton>
       </ToolTip>
       <AlertDialog
