@@ -24,6 +24,7 @@ const uploader = (subFolderPath, maxFiles, allowedFileTypes, maxFileSize, errorM
     storage,
     limits: {
       fileSize: maxFileSize,
+      files: maxFiles,
     },
     fileFilter: (req, file, cb) => {
       if (allowedFileTypes.includes(file.mimetype)) {

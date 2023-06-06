@@ -2,11 +2,6 @@ import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema(
   {
-    text: {
-      type: String,
-      required: true,
-      maxLength: 250,
-    },
     sender: {
       type: mongoose.Types.ObjectId,
       ref: 'People',
@@ -17,6 +12,15 @@ const messageSchema = new mongoose.Schema(
       ref: 'Conversation',
       required: true,
     },
+    text: {
+      type: String,
+      maxLength: 250,
+    },
+    attachments: [
+      {
+        type: String,
+      },
+    ],
     deleted: Boolean,
   },
   {

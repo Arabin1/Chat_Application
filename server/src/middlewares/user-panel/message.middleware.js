@@ -17,18 +17,22 @@ const messageValidator = [
         throw createError(404, 'The conversation was not found!');
       } else if (
         !req.user._id.equals(conversation.creator.people) &&
-        !req.user._id.equals(conversation.participant.people)
+        !req.user._id.equals(conversation.participant.people) &&
+        req.user._id.equals(conversation.deletedBy)
       ) {
         throw createError(403, 'You are not authorized to access this conversation.');
       }
+
+      return true;
     }),
-  check('text')
-    .isLength({ min: 1 })
-    .withMessage('Text is required.')
-    .isLength({ max: 250 })
-    .withMessage('Maximum 250 characters for text.')
-    .isString()
-    .withMessage('Text must be a string.'),
+  check('text').custom((value, { req }) => {
+    if (!value && !req.files.length) {
+      throw createError(400, 'Text or attachments are required.');
+    } else if (value && value.length > 250) {
+      throw createError('Maximum 250 characters for text.');
+    }
+    return true;
+  }),
 ];
 
 export default messageValidator;

@@ -26,10 +26,23 @@ const Message = ({ message, receiver, renderSeen }) => {
           />
         )}
         <div>
-          {message.text ? (
-            <div className={"message"}>{message.text}</div>
-          ) : (
+          {message.deleted ? (
             <div className={"deleted-message"}>This message was deleted</div>
+          ) : (
+            <>
+              {message.text && <div className={"message"}>{message.text}</div>}
+              {message.attachments.map((image, index) => (
+                <img
+                  alt=""
+                  key={index}
+                  src={
+                    process.env.REACT_APP_IMAGES_FOLDER +
+                    `/message-attachments/${image}`
+                  }
+                  className={"message-img"}
+                />
+              ))}
+            </>
           )}
           <div className={"m-details"}>
             <span>{format(message.updatedAt)}</span>

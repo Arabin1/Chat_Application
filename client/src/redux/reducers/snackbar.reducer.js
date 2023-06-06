@@ -5,6 +5,8 @@ export const snackbarReducer = (
     message: "There was an unknown error",
     severity: "error",
     open: false,
+    verticalP: "top",
+    horizontalP: "center",
   },
   action
 ) => {
@@ -18,6 +20,16 @@ export const snackbarReducer = (
       return {
         ...state,
         severity: action.data,
+      };
+    case SNACKBAR.SET_VERTICAL_POSITION:
+      return {
+        ...state,
+        verticalP: action.data,
+      };
+    case SNACKBAR.SET_HORIZONTAL_POSITION:
+      return {
+        ...state,
+        horizontalP: action.data,
       };
     case SNACKBAR.SET_OPEN:
       return {

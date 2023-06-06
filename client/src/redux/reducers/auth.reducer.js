@@ -30,7 +30,7 @@ const authReducer = (
         ...state,
         loading: false,
         error: true,
-        errors: action.data?.errors,
+        errors: action.data,
       };
     case AUTH.UPDATE_SUCCESS:
       return {
@@ -40,6 +40,13 @@ const authReducer = (
         errors: null,
         authData: { ...state.authData, user: action.data },
         dialogOpen: false,
+      };
+    case AUTH.SET_ERRORS_NULL:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        errors: null,
       };
     case AUTH.SET_AUTH_DIALOG:
       return {

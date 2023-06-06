@@ -8,16 +8,16 @@ import {
 } from '../../controllers/admin-panel/user.controller.js';
 import userValidator from '../../middlewares/admin-panel/user.middleware.js';
 import validatorMiddleware from '../../middlewares/common/validator.middleware.js';
-import singleImageUpload from '../../middlewares/common/imageUpload.middleware.js';
 import { userImgFolder } from '../../constants/util.constant.js';
 import profileValidator from '../../middlewares/common/user/profile.middleware.js';
-import validatorImageMiddleware from '../../middlewares/common/validator_image.middleware.js';
+import validatorImageMiddleware from '../../middlewares/common/validatorImage.middleware.js';
 import {
   removeProfilePic,
   updatePassword,
   updateProfile,
 } from '../../controllers/common/user.controller.js';
 import passwordValidator from '../../middlewares/common/user/password.middleware.js';
+import { singleImageUpload } from '../../middlewares/common/imageUpload.middleware.js';
 
 const userRoute = express.Router();
 

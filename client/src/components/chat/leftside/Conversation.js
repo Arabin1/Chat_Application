@@ -45,11 +45,16 @@ const Conversation = ({ conversation, online }) => {
             <>
               <span>
                 {userId === conversation.message.sender ? "You: " : null}
-                {conversation.message.text}
+                {conversation.message.deleted
+                  ? "This message was deleted."
+                  : conversation.message.text
+                  ? conversation.message.text
+                  : "Sent a photo"}
               </span>
 
               {userId === conversation.message.sender &&
-                conversation.people.seenAt > conversation.message.createdAt && (
+                conversation.people.seenAt >=
+                  conversation.message.updatedAt && (
                   <Avatar
                     src={
                       conversation.people.image

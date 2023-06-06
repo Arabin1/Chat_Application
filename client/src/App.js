@@ -13,8 +13,11 @@ import ChatBox from "./components/chat/chatbox/ChatBox";
 function App() {
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth.authData);
+  const { selectedConversation } = useSelector((state) => state.chat);
   const { theme } = useSelector((state) => state.setting);
-  const { open, message, severity } = useSelector((state) => state.snackbar);
+  const { open, message, severity, verticalP, horizontalP } = useSelector(
+    (state) => state.snackbar
+  );
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   return (
@@ -23,6 +26,8 @@ function App() {
         open={open}
         handleClose={() => dispatch(setOpen(false))}
         severity={severity}
+        verticalP={verticalP}
+        horizontalP={horizontalP}
       >
         {message}
       </SnackBar>
@@ -43,7 +48,17 @@ function App() {
         />
         <Route
           path={"/chat"}
-          element={authData ? <Chat /> : <Navigate to={"../login"} />}
+          element={
+            authData ? (
+              selectedConversation._id ? (
+                <Navigate to={"message"} />
+              ) : (
+                <Chat />
+              )
+            ) : (
+              <Navigate to={"../login"} />
+            )
+          }
         />
         <Route
           path={"/chat/message"}
