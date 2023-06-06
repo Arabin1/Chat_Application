@@ -5,7 +5,9 @@ import {
 } from '../../controllers/user-panel/message.controller.js';
 import authorizationMiddleware from '../../middlewares/common/authorization.middleware.js';
 import messageValidator from '../../middlewares/user-panel/message.middleware.js';
-import validatorMiddleware from '../../middlewares/common/validator.middleware.js';
+import { multiImageUpload } from '../../middlewares/common/imageUpload.middleware.js';
+import validatorImageMiddleware from '../../middlewares/common/validatorImage.middleware.js';
+import { msgAttachmentFolder } from '../../constants/util.constant.js';
 
 const messageRoute = express.Router();
 
@@ -15,8 +17,9 @@ const panel = 'user';
 messageRoute.post(
   '/',
   authorizationMiddleware(panel),
+  multiImageUpload(msgAttachmentFolder, 3),
   messageValidator,
-  validatorMiddleware,
+  validatorImageMiddleware(msgAttachmentFolder),
   storeMessage
 );
 

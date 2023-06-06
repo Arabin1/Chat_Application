@@ -12,11 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/auth.action";
 import { Alert, Collapse, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import {
-  setMessage,
-  setOpen,
-  setSeverity,
-} from "../../redux/actions/snackbar.action";
+import { openSnackbar } from "../../redux/actions/snackbar.action";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -53,15 +49,12 @@ const Login = () => {
         <div className={"remember-section"}>
           <Link to={"#"} className={"link"}>
             <span
-              onClick={() => {
-                dispatch(
-                  setMessage(
-                    "Coming Soon! This feature will be available in the future."
-                  )
-                );
-                dispatch(setSeverity("info"));
-                dispatch(setOpen(true));
-              }}
+              onClick={() =>
+                openSnackbar(
+                  "Coming Soon! This feature will be available in the future.",
+                  "success"
+                )
+              }
             >
               Forgot password?
             </span>

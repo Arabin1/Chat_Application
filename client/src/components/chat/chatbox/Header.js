@@ -8,12 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteConversation,
   setDeleteUserDialog,
+  setSelectedConversation,
 } from "../../../redux/actions/chat.action";
 import Avatar from "../../common/Avatar";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const { selectedConversation, deleteDialogOpen } = useSelector(
+  const { selectedConversation, onlineUsers, deleteDialogOpen } = useSelector(
     (state) => state.chat
   );
   const dispatch = useDispatch();
@@ -22,17 +23,24 @@ const Header = () => {
 
   const { people } = selectedConversation;
 
+  const online = !!onlineUsers.find((user) => user.userId === people._id);
+
   return (
     <div className={"header"}>
       {isSmallScreen && (
         <div style={{ paddingLeft: "-5px" }}>
-          <IconButton onClick={() => navigate("/chat")}>
+          <IconButton
+            onClick={() => {
+              dispatch(setSelectedConversation({ seenAt: "2023-06-23" }, null));
+              navigate("/chat");
+            }}
+          >
             <ArrowBack />
           </IconButton>
         </div>
       )}
       <div className={"user"}>
-        <div className={"online-dot-box"} />
+        {online && <div className={"online-dot-box"} />}
         <Avatar
           src={
             people.image
@@ -47,7 +55,7 @@ const Header = () => {
           <h3>
             {people.firstname} {people.lastname}
           </h3>
-          <span>Active now</span>
+          <span>{online && "Active now"}</span>
         </div>
       </div>
       <ToolTip title={"Delete this conversation"}>
@@ -67,8 +75,7 @@ const Header = () => {
       >
         After confirming the deletion, this action cannot be undone. All
         messages of you associated with this conversation will be permanently
-        removed. You will no longer receive any messages from {people.firstname}{" "}
-        unless you initiate a new conversation with him/her again.
+        removed.
       </AlertDialog>
     </div>
   );

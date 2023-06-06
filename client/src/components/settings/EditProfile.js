@@ -6,11 +6,7 @@ import MyButton from "../auth/Button";
 import { Avatar as MUIAvatar, IconButton } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { updateProfile } from "../../redux/actions/auth.action";
-import {
-  setMessage,
-  setOpen,
-  setSeverity,
-} from "../../redux/actions/snackbar.action";
+import { openSnackbar } from "../../redux/actions/snackbar.action";
 import Avatar from "../common/Avatar";
 
 const EditProfile = () => {
@@ -33,14 +29,10 @@ const EditProfile = () => {
         if (file.size <= maxSizeInBytes) {
           setSelectedImage(file);
         } else {
-          dispatch(setMessage("Maximum 1 MB image size is allowed!"));
-          dispatch(setSeverity("error"));
-          dispatch(setOpen(true));
+          dispatch(openSnackbar("Maximum 1 MB image size is allowed!"));
         }
       } else {
-        dispatch(setMessage("Only .jpg, .png and .jpeg format is allowed!"));
-        dispatch(setSeverity("error"));
-        dispatch(setOpen(true));
+        dispatch(openSnackbar("Only .jpg, .png and .jpeg format is allowed!"));
       }
     }
   };

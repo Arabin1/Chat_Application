@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Message from './Message.js';
+import { deleteMessageAttachments } from '../utils/helper-functions/message.helper.js';
 
 const conversationSchema = new mongoose.Schema(
   {
@@ -34,6 +35,10 @@ const conversationSchema = new mongoose.Schema(
 conversationSchema.post('findOneAndRemove', async (conversation) => {
   try {
     // Delete all messages associated with the Conversation being deleted
+    const messages = await Message.find({ conversation: conversation._id });
+
+    deleteMessageAttachments(messages);
+
     await Message.deleteMany({
       conversation: conversation._id,
     });

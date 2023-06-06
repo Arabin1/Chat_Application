@@ -6,12 +6,12 @@ import {
   updatePassword,
   updateProfile,
 } from '../../controllers/common/user.controller.js';
-import validatorImageMiddleware from '../../middlewares/common/validator_image.middleware.js';
+import validatorImageMiddleware from '../../middlewares/common/validatorImage.middleware.js';
 import profileValidator from '../../middlewares/common/user/profile.middleware.js';
 import { userImgFolder } from '../../constants/util.constant.js';
-import singleImageUpload from '../../middlewares/common/imageUpload.middleware.js';
 import passwordValidator from '../../middlewares/common/user/password.middleware.js';
 import validatorMiddleware from '../../middlewares/common/validator.middleware.js';
+import { singleImageUpload } from '../../middlewares/common/imageUpload.middleware.js';
 
 const userRoute = express.Router();
 
@@ -26,7 +26,7 @@ userRoute.put(
   authorizationMiddleware(panel),
   singleImageUpload(userImgFolder, 'image'),
   profileValidator,
-  validatorImageMiddleware,
+  validatorImageMiddleware(userImgFolder),
   updateProfile
 );
 

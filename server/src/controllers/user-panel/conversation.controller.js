@@ -1,113 +1,12 @@
 import createError from 'http-errors';
 import Conversation from '../../models/Conversation.js';
 import Message from '../../models/Message.js';
-
-const aggregateConversations = async (matchStage, userId) =>
-  Conversation.aggregate([
-    {
-      $match: matchStage,
-    },
-    {
-      $lookup: {
-        from: 'peoples',
-        localField: 'creator.people',
-        foreignField: '_id',
-        as: 'creatorPeople',
-      },
-    },
-    {
-      $lookup: {
-        from: 'peoples',
-        localField: 'participant.people',
-        foreignField: '_id',
-        as: 'participantPeople',
-      },
-    },
-    {
-      $lookup: {
-        from: 'messages',
-        let: { conversationId: '$_id' },
-        pipeline: [
-          { $match: { $expr: { $eq: ['$conversation', '$$conversationId'] } } },
-          { $sort: { createdAt: -1 } },
-          { $limit: 1 },
-          { $project: { __v: 0 } },
-        ],
-        as: 'latestMessage',
-      },
-    },
-    {
-      $project: {
-        creatorPeople: {
-          $cond: [
-            { $eq: ['$creator.people', userId] },
-            '$$REMOVE',
-            {
-              $mergeObjects: [
-                { $arrayElemAt: ['$creatorPeople', 0] },
-                { seenAt: '$creator.seenAt' },
-              ],
-            },
-          ],
-        },
-        participantPeople: {
-          $cond: [
-            { $eq: ['$participant.people', userId] },
-            '$$REMOVE',
-            {
-              $mergeObjects: [
-                { $arrayElemAt: ['$participantPeople', 0] },
-                { seenAt: '$participant.seenAt' },
-              ],
-            },
-          ],
-        },
-        creator: 1,
-        participant: 1,
-        _id: 1,
-        createdAt: 1,
-        updatedAt: 1,
-        deletedBy: 1,
-        lastMessageDate: 1,
-        message: { $arrayElemAt: ['$latestMessage', 0] },
-      },
-    },
-    {
-      $project: {
-        people: {
-          $cond: [
-            { $ifNull: ['$creatorPeople', false] },
-            {
-              _id: '$creatorPeople._id',
-              firstname: '$creatorPeople.firstname',
-              lastname: '$creatorPeople.lastname',
-              image: '$creatorPeople.image',
-              seenAt: '$creatorPeople.seenAt',
-            },
-            {
-              _id: '$participantPeople._id',
-              firstname: '$participantPeople.firstname',
-              lastname: '$participantPeople.lastname',
-              image: '$participantPeople.image',
-              seenAt: '$participantPeople.seenAt',
-            },
-          ],
-        },
-        seenAt: {
-          $cond: [{ $ifNull: ['$creatorPeople', false] }, '$participant.seenAt', '$creator.seenAt'],
-        },
-        _id: 1,
-        createdAt: 1,
-        updatedAt: 1,
-        deletedBy: 1,
-        lastMessageDate: 1,
-        message: 1,
-      },
-    },
-    {
-      $sort: { lastMessageDate: -1 },
-    },
-  ]);
+import {
+  aggregateConversations,
+  updateSeenStatus,
+} from '../../utils/helper-functions/conversation.helper.js';
+import { sendConversationWithSocket } from '../../socket/socket.controller.js';
+import { deleteMessageAttachments } from '../../utils/helper-functions/message.helper.js';
 
 export const createConversation = async (req, res) => {
   try {
@@ -126,6 +25,7 @@ export const createConversation = async (req, res) => {
         {
           $set: {
             deletedBy: null,
+            lastMessageDate: new Date(),
           },
         },
         {
@@ -153,6 +53,10 @@ export const createConversation = async (req, res) => {
     const matchStage = { _id: conversation._id };
 
     conversation = await aggregateConversations(matchStage, req.user._id);
+
+    // conversation for sending through socket to other user
+    const conversation1 = await aggregateConversations(matchStage, conversation[0].people._id);
+    sendConversationWithSocket(conversation1[0], conversation[0].people._id);
 
     return res.status(200).json({
       message: 'Successfully created a new conversation!',
@@ -195,43 +99,15 @@ export const getUserConversations = async (req, res) => {
 
 export const updateSeen = async (req, res) => {
   try {
-    let conversation = await Conversation.findById(req.params.id);
-
-    if (!conversation) {
-      throw createError(404, 'Your requested conversation was not found!');
-    }
-
-    if (req.user._id.equals(conversation.creator.people)) {
-      conversation = await Conversation.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: {
-            'creator.seenAt': Date.now(),
-          },
-        },
-        {
-          new: true,
-        }
-      );
-    } else if (req.user._id.equals(conversation.participant.people)) {
-      conversation = await Conversation.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: {
-            'participant.seenAt': Date.now(),
-          },
-        },
-        {
-          new: true,
-        }
-      );
-    } else {
-      throw createError(403, 'You are not authorized to access this conversation.');
-    }
+    let conversation = await updateSeenStatus(req.params.id, req.user._id);
 
     const matchStage = { _id: conversation._id };
 
     conversation = await aggregateConversations(matchStage, req.user._id);
+
+    // conversation for sending through socket to other user
+    const conversation1 = await aggregateConversations(matchStage, conversation[0].people._id);
+    sendConversationWithSocket(conversation1[0], conversation[0].people._id);
 
     return res.status(200).json({
       message: 'Success!',
@@ -277,6 +153,13 @@ export const deleteConversation = async (req, res) => {
           }
         );
 
+        const messages = await Message.find({
+          sender: req.user._id,
+          conversation: conversation._id,
+        });
+
+        deleteMessageAttachments(messages);
+
         await Message.updateMany(
           {
             sender: req.user._id,
@@ -286,6 +169,7 @@ export const deleteConversation = async (req, res) => {
             $set: {
               text: '',
               deleted: true,
+              attachments: [],
             },
           }
         );

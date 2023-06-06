@@ -4,7 +4,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import me from "../../assets/demo/me.jpg";
+import me from "../../assets/demo/me.jpeg";
 import Avatar from "./Avatar";
 
 function CustomDialogTitle(props) {

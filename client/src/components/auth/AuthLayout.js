@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import AddsSection from "./AddsSection";
+import { setErrorsNull } from "../../redux/actions/auth.action";
+import { useDispatch } from "react-redux";
 
 const AuthLayout = ({ children }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setErrorsNull());
+  }, [dispatch]);
+
   return (
     <div className={"auth-layout"}>
       <div className={"main-container"}>

@@ -39,6 +39,7 @@ const AppLogo = () => {
             height={60}
           />
         </IconButton>
+        <div className={"online-dot-user"} />
         <div>
           <h3>
             {user.firstname} {user.lastname}
