@@ -41,6 +41,14 @@
   z-index: 1000;
 }
 
+.user-info > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
 .user-info > div > h3 {
   margin: 0;
   padding: 0;

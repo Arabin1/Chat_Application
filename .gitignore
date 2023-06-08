@@ -29,3 +29,15 @@ yarn-error.log*
 # local files
 /Files
 
+# uploaded files
+# Ignore all files in the 'users' folder
+server/public/uploads/users/*
+
+# Exclude the '.gitkeep' file from being ignored in the 'users' folder
+!server/public/uploads/users/.gitkeep
+
+# Ignore all files in the 'message-attachments' folder
+server/public/uploads/message-attachments/*
+
+# Exclude the '.gitkeep' file from being ignored in the 'message-attachments' folder
+!server/public/uploads/message-attachments/.gitkeep
