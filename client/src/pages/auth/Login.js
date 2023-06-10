@@ -50,9 +50,11 @@ const Login = () => {
           <Link to={"#"} className={"link"}>
             <span
               onClick={() =>
-                openSnackbar(
-                  "Coming Soon! This feature will be available in the future.",
-                  "success"
+                dispatch(
+                  openSnackbar(
+                    "Coming Soon! This feature will be available in the future.",
+                    "warning"
+                  )
                 )
               }
             >
